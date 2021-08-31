@@ -19,6 +19,7 @@ def insert_pharmacy_if_not_existe(mongodb_wr: MongoWrapper, data: list):
         pharmacy["localisation"] = gps
         del pharmacy["latitude"]
         del pharmacy["longitude"]
+        pharmacy["products_ids"] = []
         for k in check_keys_list:
             check_values_list.append(pharmacy[k])  
         if mongodb_wr.insert_if_not_exist(PHARMACIES_COLLECTION.PHARMACIES_COLLECTION_NAME, check_keys_list, check_values_list, pharmacy ) is True:
@@ -36,7 +37,7 @@ def insert_pharmacy_if_not_existe(mongodb_wr: MongoWrapper, data: list):
 mongo = MongoWrapper(host=DB_CREDENTIALS.DB_URL, database=DB_CREDENTIALS.DB_NAME )
 
 # Specify your sheetname where are data to import
-filepath = r'data/pharmacies1.xlsx'
+filepath = r'data/pharmacies.xlsx'
 sheetname = 'pharmacies'
 
 data = utils.tools.excel_sheet_to_json(path=filepath,  sheetname=sheetname)

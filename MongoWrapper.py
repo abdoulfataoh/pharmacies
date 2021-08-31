@@ -1,4 +1,5 @@
 from typing import Dict
+from bson.objectid import ObjectId
 from pymongo import MongoClient, collection, database, hello
 
 class MongoWrapper(object):
@@ -59,7 +60,11 @@ class MongoWrapper(object):
         ]
         return [doc for doc in col.aggregate(pipeline)]
 
-
+    # Update one document
+    def update_one(self, collection: str, query: dict, new_values: dict):
+        col = self.db[collection]
+        col.update_one(query, new_values)
+    
 
     # Check if a value existe on db
     def is_exist(self, collection: str, keys_list: list, values_list : list) -> bool:  
@@ -90,5 +95,5 @@ if __name__ == '__main__':
     # print(mongo.test())
     # d = mongo.get_documents('products_listing', query={}, convert_id=True)
     # print(d)
-    d = mongo.get_proximity_points('pharmacies_listing', {}, -1.5698378, 12.3331678, 1)
+    d = mongo.get_proximity_points('pharmacies_listing', { "products_ids": ObjectId("612e3189ee3d034ebf1b2ecf") } ,  -1.4967793, 12.3596856)
     print(d)
