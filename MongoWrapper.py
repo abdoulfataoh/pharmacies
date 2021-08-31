@@ -24,7 +24,7 @@ class MongoWrapper(object):
       
        
     # definition of get documents list from collection
-    def get_documents(self, collection, query={}, projection=None) -> list:
+    def get_documents(self, collection, query={}, projection=None, convert_id = False) -> list:
         col = self.db[collection]
         if projection is None:
             cursor = col.find(query)
@@ -33,12 +33,38 @@ class MongoWrapper(object):
         docs_list = []
         for doc in cursor:
             docs_list.append(doc)
-        return docs_list
+        if convert_id == False:
+            return docs_list
+        else:
+            for doc in docs_list:
+                try:
+                    doc['_id'] = str(doc['_id'])
+                except KeyError:
+                    pass
+            return docs_list
+        
+    # function proximity points
+    def get_proximity_points(self,collection: str, query: dict, longitude: float, latitude: float, limit = 20):
+        col = self.db[collection]
+        pipeline = [
+            {
+                "$geoNear": {
+                    "near": { "type": "Point", "coordinates": [longitude, latitude ] },
+                    "key": "localisation",
+                    "distanceField": "distance",
+                    "query": query
+                }
+            },
+            { "$limit": limit }
+        ]
+        return [doc for doc in col.aggregate(pipeline)]
+
+
 
     # Check if a value existe on db
     def is_exist(self, collection: str, keys_list: list, values_list : list) -> bool:  
         if len(keys_list) != len(values_list):
-            raise Exception("le nombre de cles est different du nombre de valeurs transmins")
+            raise Exception("le nombre de cles est different du nombre de valeurs transmises")
         else:
             filter = dict(zip(keys_list, values_list))
             qry_result = self.get_documents(collection, query=filter)
@@ -58,3 +84,11 @@ class MongoWrapper(object):
     # Test
     def test(self):
         return (self.conn.list_database_names())
+ 
+if __name__ == '__main__':
+    mongo = MongoWrapper(host='localhost', database='pharmacies')
+    # print(mongo.test())
+    # d = mongo.get_documents('products_listing', query={}, convert_id=True)
+    # print(d)
+    d = mongo.get_proximity_points('pharmacies_listing', {}, -1.5698378, 12.3331678, 1)
+    print(d)

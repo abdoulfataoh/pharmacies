@@ -45,6 +45,11 @@ def strip_and_lowercase_values(list_json_obj: list) -> list:
 
 
 
+# Test
+if __name__ == '__main__':
+    print(excel_sheet_to_json(path='data/pharmacies1.xlsx', sheetname='pharmacies'))
+
+
 
 
 
