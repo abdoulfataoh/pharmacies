@@ -96,5 +96,5 @@ if __name__ == '__main__':
     # print(mongo.test())
     # d = mongo.get_documents('products_listing', query={}, convert_id=True)
     # print(d)
-    d = mongo.get_proximity_points('pharmacies_listing', { "products_ids": ObjectId("612e3189ee3d034ebf1b2ecf") } ,  -1.4967793, 12.3596856)
+    d = mongo.get_proximity_points('pharmacies_listing', {} ,  -1.4967793, 12.3596856)
     print(d)
