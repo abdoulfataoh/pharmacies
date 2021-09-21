@@ -10,6 +10,6 @@
         "code_postale": <str>,
         "assurance": <[str, str, ...]>,
         "latitude": <float>,
-        "longitude": <float>,
+        "longitude": <float>
     }
 ```
