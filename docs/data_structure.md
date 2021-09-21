@@ -28,6 +28,7 @@
         "addresse": <str>,
         "code_postale": <str>,
         "assurance": <[str, str, ...]>,
+        "groupe": <str>,
         "latitude": <float>,
         "longitude": <float>
         "products_ids": <[ObjectId(<hexadecimal>), ObjectId(<hexadecimal>), ...]>,
@@ -59,6 +60,7 @@
         addresse
         code_postale
         assurance
+        groupe
         latitude
         longitude
         products_ids
