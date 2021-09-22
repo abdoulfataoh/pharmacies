@@ -1,21 +1,36 @@
-import pandas
+#coding: utf-8
+
+import openpyxl
 import json
 
-def excel_sheet_to_json(path: str, sheetname: str) -> list:
-    """convert excel sheet to json objects list
-       suported file format are: .xlsx,.xlsm,.xltx,.xltm
-
-    Args:
-        path (str): iput excel file path
-        sheetname (str): sheet name
-
-    Returns:
-        list: json objects list
-    """
-    data = pandas.read_excel(path, sheetname).fillna('')
-    return json.loads(data.to_json(orient='records'))
-
-
+def exel_to_json(file_path: str, sheetname: str, replace_none_value=None, lower=True):
+    """ convert excel sheet to dict. the first ligne is the header """
+    
+    excel_file = openpyxl.load_workbook(file_path)
+    sheet = excel_file[sheetname]
+    max_row = sheet.max_row
+    max_col = sheet.max_column
+    min_col = sheet.min_column
+    min_row = sheet.min_row
+    json_items_list = []
+    
+    header = [str((sheet.cell(row = min_row, column = i).value)) for i in range(1, max_col+1)]
+    
+    tmp_list = []
+    for r in range(min_row+1, max_row+1):
+        for c in range(min_col, max_col+1):
+            cell_value = sheet.cell(row = r, column = c).value
+            if replace_none_value is not None and cell_value is None:
+                cell_value = replace_none_value
+            if lower is True and type(cell_value) is str:
+                cell_value = cell_value.lower().strip()
+            tmp_list.append(cell_value)
+                
+        json_items_list.append(dict(zip(header, tmp_list)))
+        tmp_list = []
+    
+    return json.dumps(json_items_list, indent=4, ensure_ascii=False)
+    
 def split_values(list_json_obj: list, fields_name:list) -> list: 
     """split values ​​contained in fields of a list of json objects
         example:
@@ -36,18 +51,9 @@ def split_values(list_json_obj: list, fields_name:list) -> list:
             list_json_obj[i][fields_name[p]['key']] = list_json_obj[i][fields_name[p]['key']].split(fields_name[p]['separator'])
     return list_json_obj
 
-def strip_and_lowercase_values(list_json_obj: list) -> list:
-    for json_obj in list_json_obj:
-        for k in json_obj.keys():
-            if type(json_obj[k]) is str:
-                json_obj[k] = json_obj[k].strip().lower()
-    return list_json_obj
-
-
-
 # Test
 if __name__ == '__main__':
-    print(excel_sheet_to_json(path='data/pharmacies1.xlsx', sheetname='pharmacies'))
+    print(exel_to_json('data/produits.xlsx', 'produits'))
 
 
 
