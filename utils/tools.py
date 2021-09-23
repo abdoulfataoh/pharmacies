@@ -28,8 +28,8 @@ def exel_to_json(file_path: str, sheetname: str, replace_none_value=None, lower=
                 
         json_items_list.append(dict(zip(header, tmp_list)))
         tmp_list = []
-    
-    return json.dumps(json_items_list, indent=4, ensure_ascii=False)
+    d = json.dumps(json_items_list, indent=4, ensure_ascii=False)
+    return json.loads(d)
     
 def split_values(list_json_obj: list, fields_name:list) -> list: 
     """split values ​​contained in fields of a list of json objects
@@ -48,15 +48,15 @@ def split_values(list_json_obj: list, fields_name:list) -> list:
     """
     for i in range(len(list_json_obj)):
         for p in range(len(fields_name)):
-            list_json_obj[i][fields_name[p]['key']] = list_json_obj[i][fields_name[p]['key']].split(fields_name[p]['separator'])
+            try:
+                t = list_json_obj[i][fields_name[p]['key']].split(fields_name[p]['separator'])
+            except AttributeError:
+                    t = []
+            list_json_obj[i][fields_name[p]['key']] = t
     return list_json_obj
 
 # Test
 if __name__ == '__main__':
-    print(exel_to_json('data/produits.xlsx', 'produits'))
-
-
-
-
-
-
+    d = exel_to_json('../data/produits.xlsx', 'produits')
+    d = split_values(d,  [{'key':'dci', 'separator': ','}])
+    print(d)
