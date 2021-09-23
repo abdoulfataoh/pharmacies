@@ -24,7 +24,7 @@ class MongoWrapper(object):
         col.insert_one(document)
          
     # definition of get documents list from collection
-    def get_documents(self, collection, query={}, projection=None, convert_id = False) -> list:
+    def get_documents(self, collection, query={}, projection=None) -> list:
         col = self.db[collection]
         if projection is None:
             cursor = col.find(query)
@@ -33,15 +33,8 @@ class MongoWrapper(object):
         docs_list = []
         for doc in cursor:
             docs_list.append(doc)
-        if convert_id == False:
-            return docs_list
-        else:
-            for doc in docs_list:
-                try:
-                    doc['_id'] = str(doc['_id'])
-                except KeyError:
-                    pass
-            return docs_list
+        return docs_list
+  
         
     # function proximity points
     def get_proximity_points(self,collection: str, query: dict, longitude: float, latitude: float, limit = 20, raduis=274_200_000):
@@ -92,8 +85,7 @@ class MongoWrapper(object):
     # delete document from _id
     def delete_document(self, collection: str, filter):
          col = self.db[collection]
-         col.delete_one(filter)
-     
+         col.delete_one(filter)    
 
     def test(self):
         return (self.conn.list_database_names())

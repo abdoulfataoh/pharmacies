@@ -20,9 +20,9 @@ def add_product(db_wrapper: MongoWrapper, product: dict) -> bool:
 
 def get_products(db_wrapper: MongoWrapper):
     """ get all products list"""
-    return json.dumps(db_wrapper.get_documents(collection=settings.PRODUCTS_COLLECTION_NAME,
-                        convert_id=True), indent=4     
-    )
+    d = db_wrapper.get_documents(collection=settings.PRODUCTS_COLLECTION_NAME)   
+    return _decode_ids(d, ["_id"])
+    
 
 def edit_product(db_wrapper: MongoWrapper, product_id: str, set_document: dict):
     """ modify an existing product """
@@ -52,9 +52,8 @@ def add_pharmacie(db_wrapper: MongoWrapper, pharmacie: dict) -> bool:
 
 def get_pharmacies(db_wrapper: MongoWrapper):
     """ get all pharmacies list"""
-    return json.dumps(db_wrapper.get_documents(collection=settings.PHARMACIES_COLLECTION_NAME,
-                        convert_id=True), indent=4     
-    )
+    d = db_wrapper.get_documents(collection=settings.PHARMACIES_COLLECTION_NAME)
+    return _decode_ids(d, ["_id", "products_ids"])  
 
 def edit_pharmacie(db_wrapper: MongoWrapper, pharmacie_id: str, set_document: dict):
     """ modify an existing pharmacie """
@@ -74,6 +73,18 @@ def _is_valide_structure(keys: list, check_keys: list) -> bool:
         return any([keys[i] in check_keys for i in range(len(keys)) ])
     else:
         return False
+
+def _decode_ids(documents: list, keys) -> list:
+    for doc in documents:
+        for k in keys:
+            try:
+                doc[k] = [ str(v) for v in doc[k] ]
+            except TypeError:
+                doc[k]= str(doc[k])
+    return documents
+
+
+
 
 ################
 
@@ -97,5 +108,7 @@ if __name__ == '__main__':
     # print(add_product(M, {"a":4, "b": 4}))
     # print(get_products(M))
     # delete_product(M, "614b1dc0c1b00b1b89acadc0")
-    disable_product(M, "614ba438ff8d302ddad1c718", "614b9bbe257b7ec7226aad2d")
+    # enable_product(M, "614c67ec7831965969347dc6", "614b9bbe257b7ec7226aad2d")
+    d = get_pharmacies(M)
+    print(d[0])
     
