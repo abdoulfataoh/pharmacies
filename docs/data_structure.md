@@ -29,8 +29,7 @@
         "code_postale": <str>,
         "assurance": <[str, str, ...]>,
         "groupe": <str>,
-        "latitude": <float>,
-        "longitude": <float>
+        "localisation": {"Point": latitude: <float>, longitude: <float>]}
         "products_ids": <[ObjectId(<hexadecimal>), ObjectId(<hexadecimal>), ...]>,
     }
 ```
