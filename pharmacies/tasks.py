@@ -38,8 +38,6 @@ def delete_product(db_wrapper: MongoWrapper, product_id: str):
     """delete a product by _id"""
     db_wrapper.delete_document(collection=settings.PRODUCTS_COLLECTION_NAME, filter={"_id": ObjectId(product_id)})
 
-
-######################
 def add_pharmacie(db_wrapper: MongoWrapper, pharmacie: dict) -> bool:
     """add a pharmacie to the database"""
     if _is_valide_structure(list(pharmacie.keys()), settings.PHARMACIES_KEYS_NAMES) is True:
@@ -83,11 +81,6 @@ def _decode_ids(documents: list, keys) -> list:
                 doc[k]= str(doc[k])
     return documents
 
-
-
-
-################
-
 def enable_product(mongodb_wr: MongoWrapper, pharmacy_id: str, product_id: str):
     """activate a product for a pharmacy"""
     filter = { "_id": ObjectId(pharmacy_id) }
@@ -100,7 +93,13 @@ def disable_product(mongodb_wr: MongoWrapper, pharmacy_id: str, product_id: str)
     new_values = { "$pull": { "products_ids": ObjectId(product_id)  } }
     mongodb_wr.update_document(settings.PHARMACIES_COLLECTION_NAME, filter=filter, set_document=new_values )
 
-
+def search_pharmacies(mongodb_wr: MongoWrapper,groupe, product_id: str, longitude: float, latitude: float, limit = 20):
+    try:
+        query = { "products_ids": ObjectId(product_id), "groupe": groupe }
+    except:
+        return {}
+    d = mongodb_wr.get_proximity_points(settings.PHARMACIES_COLLECTION_NAME, query, longitude, latitude, limit=limit)
+    return _decode_ids(d, ["_id"])   
 
 # Test
 if __name__ == '__main__':
@@ -109,6 +108,6 @@ if __name__ == '__main__':
     # print(get_products(M))
     # delete_product(M, "614b1dc0c1b00b1b89acadc0")
     # enable_product(M, "614c67ec7831965969347dc6", "614b9bbe257b7ec7226aad2d")
-    d = get_pharmacies(M)
-    print(d[0])
+    d = search_pharmacies(M, "groupe 1", "614b9bbe257b7ec7226aad2d", -1.5698727, 12.3330991, 5)
+    print(d)
     

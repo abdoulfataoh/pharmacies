@@ -37,12 +37,12 @@ class MongoWrapper(object):
   
         
     # function proximity points
-    def get_proximity_points(self,collection: str, query: dict, longitude: float, latitude: float, limit = 20, raduis=274_200_000):
+    def get_proximity_points(self,collection: str, query: dict, latitude: float, longitude: float, limit = 20, raduis=274_200_000):
         col = self.db[collection]
         pipeline = [
             {
                 "$geoNear": {
-                    "near": { "type": "Point", "coordinates": [longitude, latitude ] },
+                    "near": { "type": "Point", "coordinates": [latitude, longitude] },
                     "key": "localisation",
                     "distanceField": "distance",
                     "query": query,
