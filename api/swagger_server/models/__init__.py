@@ -1,0 +1,11 @@
+# coding: utf-8
+
+# flake8: noqa
+from __future__ import absolute_import
+# import models into model package
+from swagger_server.models.pharmacie_add_body import PharmacieAddBody
+from swagger_server.models.pharmacie_delete_body import PharmacieDeleteBody
+from swagger_server.models.pharmacie_id_set_available_products_body import PharmacieIdSetAvailableProductsBody
+from swagger_server.models.pharmacie_id_set_unvailable_products_body import PharmacieIdSetUnvailableProductsBody
+from swagger_server.models.products_add_body import ProductsAddBody
+from swagger_server.models.products_delete_body import ProductsDeleteBody
