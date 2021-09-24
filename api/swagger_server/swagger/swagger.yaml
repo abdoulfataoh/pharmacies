@@ -424,7 +424,7 @@ components:
             type: string
     pharmacie_delete_body:
       required:
-      - pharmacie
+      - pharmacie_id
       type: object
       properties:
         pharmacie_id:

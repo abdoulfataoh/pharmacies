@@ -58,5 +58,7 @@ class PharmacieDeleteBody(Model):
         :param pharmacie_id: The pharmacie_id of this PharmacieDeleteBody.
         :type pharmacie_id: str
         """
+        if pharmacie_id is None:
+            raise ValueError("Invalid value for `pharmacie_id`, must not be `None`")  # noqa: E501
 
         self._pharmacie_id = pharmacie_id

@@ -1,5 +1,9 @@
 import connexion
 import six
+from datetime import datetime
+import sys
+sys.path.append(r'../')
+
 
 from swagger_server.models.pharmacie_add_body import PharmacieAddBody  # noqa: E501
 from swagger_server.models.pharmacie_delete_body import PharmacieDeleteBody  # noqa: E501
@@ -9,16 +13,29 @@ from swagger_server.models.products_add_body import ProductsAddBody  # noqa: E50
 from swagger_server.models.products_delete_body import ProductsDeleteBody  # noqa: E501
 from swagger_server import util
 
+from pharmacies import tasks
+from db_wrapper import mongodb_wrapper
+
+host='localhost'
+database='pharmacies'
+port=27017
+
+def result_model(success, result):
+    return  {
+            "success": success,
+            "timestamp": datetime.now(),
+            "result": result
+    }
+
+M = mongodb_wrapper.MongoWrapper(host=host, database=database, port=port)
+
 
 def health_get():  # noqa: E501
-    """Get server health status
-
-     # noqa: E501
-
-
-    :rtype: object
-    """
-    return 'do some magic!'
+    r = tasks.health(M)
+    if r == True:
+        return result_model(True, r)
+    else:
+        return result_model(False, r)
 
 
 def pharmacie_add_post(body):  # noqa: E501
@@ -33,7 +50,7 @@ def pharmacie_add_post(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = PharmacieAddBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    return body
 
 
 def pharmacie_delete_post(body):  # noqa: E501
@@ -48,18 +65,12 @@ def pharmacie_delete_post(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = PharmacieDeleteBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+        body = body.to_dict()
+    return result_model(True, tasks.delete_pharmacie(M, tasks.delete_pharmacie(M, body["pharmacie_id"])))
 
 
 def pharmacies_list_get():  # noqa: E501
-    """Returns a list of pharmacies
-
-     # noqa: E501
-
-
-    :rtype: object
-    """
-    return 'do some magic!'
+    return result_model(True, tasks.get_products(M))
 
 
 def pharmacies_mananger_pharmacie_id_set_available_products_post(body, pharmacie_id):  # noqa: E501
@@ -129,41 +140,16 @@ def pharmacies_proximities_search_product_id_get(search_product_id, lat, long): 
 
 
 def products_add_post(body):  # noqa: E501
-    """add a product
-
-     # noqa: E501
-
-    :param body: 
-    :type body: dict | bytes
-
-    :rtype: object
-    """
     if connexion.request.is_json:
-        body = ProductsAddBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
-
+        r = tasks.add_product(M, body)
+    return result_model(True, r)
 
 def products_delete_post(body):  # noqa: E501
-    """delete a product
-
-     # noqa: E501
-
-    :param body: 
-    :type body: dict | bytes
-
-    :rtype: object
-    """
     if connexion.request.is_json:
         body = ProductsDeleteBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
-
+        body = body.to_dict()
+        r = tasks.delete_product(M, body["product_id"])
+    return result_model(True, r)
 
 def products_list_get():  # noqa: E501
-    """Returns a list of products
-
-     # noqa: E501
-
-
-    :rtype: object
-    """
-    return 'do some magic!'
+    return result_model(True, tasks.get_products(M))

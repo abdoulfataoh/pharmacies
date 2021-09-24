@@ -7,6 +7,13 @@ from pharmacies import settings
 from db_wrapper.mongodb_wrapper import MongoWrapper
 from bson import ObjectId
 
+def health(mongodb_wrapper: MongoWrapper) -> bool:
+    try:
+        mongodb_wrapper.test()
+        return True
+    except:
+        return False
+
 
 def add_product(db_wrapper: MongoWrapper, product: dict) -> bool:
     """add a product to the database"""
@@ -37,6 +44,7 @@ def edit_product(db_wrapper: MongoWrapper, product_id: str, set_document: dict):
 def delete_product(db_wrapper: MongoWrapper, product_id: str):
     """delete a product by _id"""
     db_wrapper.delete_document(collection=settings.PRODUCTS_COLLECTION_NAME, filter={"_id": ObjectId(product_id)})
+    return True
 
 def add_pharmacie(db_wrapper: MongoWrapper, pharmacie: dict) -> bool:
     """add a pharmacie to the database"""
@@ -65,6 +73,7 @@ def edit_pharmacie(db_wrapper: MongoWrapper, pharmacie_id: str, set_document: di
 
 def delete_pharmacie(db_wrapper: MongoWrapper, pharmacie_id: str):
     db_wrapper.delete_document(collection=settings.PHARMACIES_COLLECTION_NAME, filter={"_id": ObjectId(pharmacie_id)})
+    return True
 
 def _is_valide_structure(keys: list, check_keys: list) -> bool:
     if len(keys) == len(check_keys):
@@ -108,6 +117,6 @@ if __name__ == '__main__':
     # print(get_products(M))
     # delete_product(M, "614b1dc0c1b00b1b89acadc0")
     # enable_product(M, "614c67ec7831965969347dc6", "614b9bbe257b7ec7226aad2d")
-    d = search_pharmacies(M, "groupe 1", "614b9bbe257b7ec7226aad2d", -1.5698727, 12.3330991, 5)
-    print(d)
+    # d = search_pharmacies(M, "groupe 1", "614b9bbe257b7ec7226aad2d", -1.5698727, 12.3330991, 5)
+    print(add_product(M, {}))
     
