@@ -102,13 +102,16 @@ def disable_product(mongodb_wr: MongoWrapper, pharmacy_id: str, product_id: str)
     new_values = { "$pull": { "products_ids": ObjectId(product_id)  } }
     mongodb_wr.update_document(settings.PHARMACIES_COLLECTION_NAME, filter=filter, set_document=new_values )
 
-def search_pharmacies(mongodb_wr: MongoWrapper,groupe, product_id: str, longitude: float, latitude: float, limit = 20):
-    try:
-        query = { "products_ids": ObjectId(product_id), "groupe": groupe }
-    except:
-        return {}
+def search_pharmacies(mongodb_wr: MongoWrapper, longitude: float, latitude: float, groupe=None, product_id=None, limit = 10):
+    if groupe == None or product_id == None:
+        query = {}
+    else:
+        try:
+            query = { "products_ids": ObjectId(product_id), "groupe": groupe }
+        except:
+            return {}
     d = mongodb_wr.get_proximity_points(settings.PHARMACIES_COLLECTION_NAME, query, longitude, latitude, limit=limit)
-    return _decode_ids(d, ["_id"])   
+    return _decode_ids(d, ["_id"])
 
 # Test
 if __name__ == '__main__':
@@ -118,5 +121,6 @@ if __name__ == '__main__':
     # delete_product(M, "614b1dc0c1b00b1b89acadc0")
     # enable_product(M, "614c67ec7831965969347dc6", "614b9bbe257b7ec7226aad2d")
     # d = search_pharmacies(M, "groupe 1", "614b9bbe257b7ec7226aad2d", -1.5698727, 12.3330991, 5)
-    print(add_product(M, {}))
+    d = search_pharmacies(M, -1.5698727, 12.3330991, 5)
+    print(d)
     

@@ -96,8 +96,8 @@ if __name__ == '__main__':
     # print(mongo.test())
     # d = mongo.get_documents('products_listing', query={}, convert_id=True)
     # print(d)
-    # d = M.get_proximity_points('pharmacies_listing', {} ,  -1.5698727, 12.3330991)
-    print(M.test())
+    d = M.get_proximity_points('pharmacies_listing', {} ,  -1.5698727, 12.3330991)
+    print(d)
     # print(M.is_exist("test", ["a", "b"], {"a":1, "b": 2}))
     # d = {"a":1, "b": 4}
     # print(M.insert_if_not_exist("test", ["a", "b"], d) )

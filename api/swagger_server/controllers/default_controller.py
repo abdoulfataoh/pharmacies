@@ -108,18 +108,7 @@ def pharmacies_mananger_pharmacie_id_set_unvailable_products_post(body, pharmaci
 
 
 def pharmacies_proximities_list_get(lat, long):  # noqa: E501
-    """Returns a list of pharmacies order by proximity
-
-     # noqa: E501
-
-    :param lat: client location latitude
-    :type lat: float
-    :param long: client location longitude
-    :type long: float
-
-    :rtype: object
-    """
-    return 'do some magic!'
+    return result_model(True, tasks.search_pharmacies(M, latitude=lat, longitude=long))
 
 
 def pharmacies_proximities_search_product_id_get(search_product_id, lat, long):  # noqa: E501
