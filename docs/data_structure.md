@@ -137,6 +137,10 @@ Le script ```recipes/recipe-import-pharmacies.py``` permet de formater et d'impo
 Il a les meme fonctionnalites et les memes exigences que le precedent.
 la structutes de la feuille a importe a la suivante:
 
+| nom_pharmacie | telephone | code_postale | addresse | assurance |	groupe | latitude |	longitude |
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ |------ |
+| Aïmèvo | 25396399 | 18 BP 48 | ouaga 18, Ouagadougou | sonar, sam| 3 | -1.47993 |	12.33893 |
+| ... | ... | ... | ... | ... | ... | ... | ... |
 
 
 
