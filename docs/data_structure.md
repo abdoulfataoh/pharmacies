@@ -1,7 +1,24 @@
-# Data structure 
+# Projet: pharmacies
+**Objectif global:**
+- Contribuer à améliorer la santé de la population
+
+**Objectifs spécifiques:**
+- Permettre aux utilisateurs de trouver la pharmacie la plus proche (jour ouvrable ou garde) disposant du médicament.
+- Permettre aux utilisateurs d’entrer en contact avec un médecin à proximité.
+- Permettre aux utilisateurs de trouver la formation sanitaire la plus proche.
+
+# Membres du groupe
+- [KABORE Abdoul Fataoh](abdoulfataoh@gmail.com)
+- OUEDRAOGO Ibrahim Allasane
+- OUEDRAOGO Ibrahim 
+- ROBGO Karima
+
+# Ressources
+
+[Toutes les ressources(lien)](https://drive.google.com/drive/folders/1oyWhHtyosVzUHSvEOt_HuW_dcJ0dEvfP?usp=sharing)
 
 
-1. Products data structure
+# Structure de stockage dans la base de donnees des produits
 
 ```javascript
     {
@@ -17,7 +34,7 @@
     }
 ```
 
-2. Pharmacies data structure
+# Structure de stockage dans la base de donnees des pharmacies
 
 
 ```javascript
