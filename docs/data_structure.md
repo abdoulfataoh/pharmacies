@@ -15,7 +15,7 @@
 
 # Ressources
 
-[Toutes les ressources(lien)](https://drive.google.com/drive/folders/1oyWhHtyosVzUHSvEOt_HuW_dcJ0dEvfP?usp=sharing)
+[Toutes les ressources (cliquez ici) ](https://drive.google.com/drive/folders/1oyWhHtyosVzUHSvEOt_HuW_dcJ0dEvfP?usp=sharing)
 
 
 # Structure de stockage dans la base de donnees des produits
@@ -51,8 +51,7 @@
     }
 ```
 
-
-3. relationship between pharmacies collection and products collection
+# Relation entre produits et pharmacies
 
 ```plantuml 
     @startuml
