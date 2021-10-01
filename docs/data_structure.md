@@ -83,3 +83,48 @@
 pharmacie }|-- product
 @enduml
 ```
+# struture du projet
+- ```/utils``` contient les utilitaires
+- ```/mongo_wrapper``` contient une classe ui est l'interface de communication entre les taches et la base de donnees
+- ```/recipes``` contient des recettes qui permettent de faire des operations conrantes telque l'import des produits et pharmacies
+- ```/api``` contient fichiers de configurations et le controleur de swagger
+- ```/data``` contient des fichiers ressources du projet
+
+
+
+
+# Demarrage de la base de donnees 
+
+```
+docker container run -itd  --name  uvbf-mongodb -p 27017:27017 mongo
+```
+
+# creation de la base de donnees et des collections
+
+(Ces etapes ne sont pas neccessaires, ils sont crees automatiquement par le programme)
+
+```
+docker container exec -it uvbf-mongodb bash
+mongo
+use pharmacies
+db.createCollection('products_listing')
+db.createCollection('pharmacies_listing')
+```
+
+
+# Import des produits depuis une feuille excel
+Le script ```recipes/recipe-import-pharmacies.py``` permet de formater et d'importer depuis une feuille excel les produits.
+Ses fonctionnalites sont:
+- transformation des caractères en minuscule et suppression des espaces inutiles
+- Convertir une cellule contenant une liste des d'éléments séparés par un marqueur(exemple le virgule) en tableau d'éléments. 
+	par exemple la cellule contenant le DCI "artémether, luméfantrine" transformes en [ "artémether", "luméfantrine"] pendant l'import
+
+Pour eviter l'importation de donnees qui ne respecte pas la strucutre(notre strucutre) d'un produit pharmaceutique des controles ont etes mise en place.
+
+| nom_commercial | dci | dosage | forme_galemique | lab_fabricant | conditionnement | prix_unitaire |
+
+| header | header |
+
+
+
+
