@@ -119,11 +119,12 @@ Ses fonctionnalites sont:
 - Convertir une cellule contenant une liste des d'éléments séparés par un marqueur(exemple le virgule) en tableau d'éléments. 
 	par exemple la cellule contenant le DCI "artémether, luméfantrine" transformes en [ "artémether", "luméfantrine"] pendant l'import
 
-Pour eviter l'importation de donnees qui ne respecte pas la strucutre(notre strucutre) d'un produit pharmaceutique des controles ont etes mise en place.
+Pour eviter l'importation de donnees qui ne respecte pas la strucutre(notre strucutre) d'un produit pharmaceutique des controles ont etes mise en place: la feuille excel doit avoir la strucutre suivante
 
 | nom_commercial | dci | dosage | forme_galemique | lab_fabricant | conditionnement | prix_unitaire |
-
-| header | header |
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| artome tm | artémether, luméfantrine | 15mg-90mg/5ml | pdre susp buv | | fl/60 ml | 2048 |
+| ... | ... | ... | ... | ... | ... | ... |
 
 
 
