@@ -76,56 +76,30 @@ def pharmacies_list_get():  # noqa: E501
 def pharmacies_mananger_pharmacie_id_set_available_products_post(body, pharmacie_id):  # noqa: E501
     """set products list as available products for a pharmacie
 
-     # noqa: E501
-
-    :param body: 
-    :type body: dict | bytes
-    :param pharmacie_id: pharmacie_id
-    :type pharmacie_id: str
-
-    :rtype: object
     """
     if connexion.request.is_json:
         body = PharmacieIdSetAvailableProductsBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+        body = body.to_dict()
+    return result_model(True, tasks.enable_products(M, pharmacie_id, body["products_ids"]))
 
 
 def pharmacies_mananger_pharmacie_id_set_unvailable_products_post(body, pharmacie_id):  # noqa: E501
     """set products list as available products for a pharmacie
-
-     # noqa: E501
-
-    :param body: 
-    :type body: dict | bytes
-    :param pharmacie_id: pharmacie_id
-    :type pharmacie_id: str
-
-    :rtype: object
     """
+
     if connexion.request.is_json:
         body = PharmacieIdSetUnvailableProductsBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    body = body.to_dict()
+    return result_model(True, tasks.disable_products(M, pharmacie_id, body["products_ids"]))
 
 
 def pharmacies_proximities_list_get(lat, long):  # noqa: E501
-    return result_model(True, tasks.search_pharmacies(M, latitude=lat, longitude=long))
+    return result_model(True, tasks.search_pharmacies(M, latitude=long, longitude=lat))
 
 
 def pharmacies_proximities_search_product_id_get(search_product_id, lat, long):  # noqa: E501
-    """Returns a list of pharmacies order by proximity with a specic product
-
-     # noqa: E501
-
-    :param search_product_id: product id
-    :type search_product_id: str
-    :param lat: client location latitude
-    :type lat: float
-    :param long: client location longitude
-    :type long: float
-
-    :rtype: object
-    """
-    return 'do some magic!'
+    """Returns a list of pharmacies order by proximity with a specic product"""
+    return result_model(True, tasks.search_pharmacies(M, latitude=long, longitude=lat,product_id=search_product_id))
 
 
 def products_add_post(body):  # noqa: E501

@@ -12,7 +12,7 @@ PRODUCTS_KEYS_NAMES = [
     'prix_public'
 ]
 
-PRODUCTS_CHECK_KEYS = ['nom_commercial', 'conditionnement']
+PRODUCTS_CHECK_KEYS = ['nom_commercial', 'conditionnement', 'lab_fabricant', 'forme_galemique']
 
 # Pharmacies collection config
 PHARMACIES_COLLECTION_NAME = 'pharmacies_listing'

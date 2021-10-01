@@ -35,4 +35,4 @@ def _format_pharmacie(pharmacie: str) -> dict:
 
 # process
 split_columns_values = [{'key':'assurance', 'separator': ','}]
-import_pharmacies(r'../data/groupes_pharmacies.xlsx', 'groupe_1', split_columns_values)
+import_pharmacies(r'../data/groupes_pharmacies.xlsx', 'groupe_3', split_columns_values)

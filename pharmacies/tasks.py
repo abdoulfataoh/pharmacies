@@ -90,28 +90,39 @@ def _decode_ids(documents: list, keys) -> list:
                 doc[k]= str(doc[k])
     return documents
 
-def enable_product(mongodb_wr: MongoWrapper, pharmacy_id: str, product_id: str):
+def enable_products(mongodb_wr: MongoWrapper, pharmacy_id: str, products_ids: list):
     """activate a product for a pharmacy"""
-    filter = { "_id": ObjectId(pharmacy_id) }
-    new_values = { "$push": { "products_ids": ObjectId(product_id)  } }
-    mongodb_wr.update_document(settings.PHARMACIES_COLLECTION_NAME, filter=filter, set_document=new_values )
+    for product_id in products_ids:
+        filter = { "_id": ObjectId(pharmacy_id) }
+        new_values = { "$push": { "products_ids": ObjectId(product_id)  } }
+        mongodb_wr.update_document(settings.PHARMACIES_COLLECTION_NAME, filter=filter, set_document=new_values )
     
-def disable_product(mongodb_wr: MongoWrapper, pharmacy_id: str, product_id: str):
+    
+def disable_products(mongodb_wr: MongoWrapper, pharmacy_id: str, products_ids: list):
     """disbale product"""
-    filter = { "_id": ObjectId(pharmacy_id) }
-    new_values = { "$pull": { "products_ids": ObjectId(product_id)  } }
-    mongodb_wr.update_document(settings.PHARMACIES_COLLECTION_NAME, filter=filter, set_document=new_values )
+    for product_id in products_ids:
+        filter = { "_id": ObjectId(pharmacy_id) }
+        new_values = { "$pull": { "products_ids": ObjectId(product_id)  } }
+        mongodb_wr.update_document(settings.PHARMACIES_COLLECTION_NAME, filter=filter, set_document=new_values )
 
-def search_pharmacies(mongodb_wr: MongoWrapper, longitude: float, latitude: float, groupe=None, product_id=None, limit = 10):
-    if groupe == None or product_id == None:
+def search_pharmacies(mongodb_wr: MongoWrapper, longitude: float, latitude: float, product_id=None, groupe=None, limit = 3):
+    if groupe == None and product_id == None:
         query = {}
+    elif groupe == None:
+        query = query = {"products_ids": ObjectId(product_id)}
+    elif product_id == None:
+        query = {"groupe": groupe }
     else:
         try:
             query = { "products_ids": ObjectId(product_id), "groupe": groupe }
         except:
             return {}
-    d = mongodb_wr.get_proximity_points(settings.PHARMACIES_COLLECTION_NAME, query, longitude, latitude, limit=limit)
-    return _decode_ids(d, ["_id"])
+    data = mongodb_wr.get_proximity_points(settings.PHARMACIES_COLLECTION_NAME, query, longitude, latitude, limit=limit)
+    data = _decode_ids(data, ["_id"]) 
+    for d in data:
+        del d["products_ids"]
+    return data
+
 
 # Test
 if __name__ == '__main__':
@@ -121,6 +132,7 @@ if __name__ == '__main__':
     # delete_product(M, "614b1dc0c1b00b1b89acadc0")
     # enable_product(M, "614c67ec7831965969347dc6", "614b9bbe257b7ec7226aad2d")
     # d = search_pharmacies(M, "groupe 1", "614b9bbe257b7ec7226aad2d", -1.5698727, 12.3330991, 5)
-    d = search_pharmacies(M, -1.5698727, 12.3330991, 5)
+    d = search_pharmacies(M, -1.5698727, 12.3330991, product_id=None, groupe=1)
+    # d = enable_products(M, "614e13463a309c3503b4ef99", [ "614e1350bd7df13306e96dcc", "614e1350bd7df13306e96dcd"])
     print(d)
     
