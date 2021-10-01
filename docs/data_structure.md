@@ -113,7 +113,7 @@ db.createCollection('pharmacies_listing')
 
 
 # Import des produits depuis une feuille excel
-Le script ```recipes/recipe-import-pharmacies.py``` permet de formater et d'importer depuis une feuille excel les produits.
+Le script ```recipes/recipe-import-products.py``` permet de formater et d'importer depuis une feuille excel les produits.
 Ses fonctionnalites sont:
 - transformation des caractères en minuscule et suppression des espaces inutiles
 - Convertir une cellule contenant une liste des d'éléments séparés par un marqueur(exemple le virgule) en tableau d'éléments. 
@@ -125,6 +125,21 @@ Pour eviter l'importation de donnees qui ne respecte pas la strucutre(notre stru
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | artome tm | artémether, luméfantrine | 15mg-90mg/5ml | pdre susp buv | | fl/60 ml | 2048 |
 | ... | ... | ... | ... | ... | ... | ... |
+
+- [ ] 1. LA premiere ligne a importer doit avoir les memes attribut que l'entete du tableau ci dessus
+- [ ] 2. Etre dans le meme dossier que script afin de pouvoir l'executer
+
+plus de detailles a voir dans le script
+
+# Import des pharmacies depuis une feuille excel
+
+Le script ```recipes/recipe-import-pharmacies.py``` permet de formater et d'importer depuis une feuille excel les pharmacies.
+Il a les meme fonctionnalites et les memes exigences que le precedent.
+la structutes de la feuille a importe a la suivante:
+
+
+
+
 
 
 
