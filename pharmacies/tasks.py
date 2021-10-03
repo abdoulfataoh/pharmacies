@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import re
 import sys
 sys.path.append(r'../')
 import json
@@ -105,22 +106,31 @@ def disable_products(mongodb_wr: MongoWrapper, pharmacy_id: str, products_ids: l
         new_values = { "$pull": { "products_ids": ObjectId(product_id)  } }
         mongodb_wr.update_document(settings.PHARMACIES_COLLECTION_NAME, filter=filter, set_document=new_values )
 
-def search_pharmacies(mongodb_wr: MongoWrapper, longitude: float, latitude: float, product_id=None, groupe=None, limit = 3):
-    if groupe == None and product_id == None:
-        query = {}
-    elif groupe == None:
-        query = query = {"products_ids": ObjectId(product_id)}
-    elif product_id == None:
-        query = {"groupe": groupe }
-    else:
-        try:
+def search_pharmacies(mongodb_wr: MongoWrapper,
+    latitude: float,
+    longitude: float,
+    product_id=None,
+    groupe=None, limit = 10,
+    assurance = None
+):
+    try:
+        if product_id == None and groupe == None and assurance == None:
+            query = {}
+        elif product_id != None and groupe != None and assurance != None: # Toutes les pharmacies de proxim
+            query = { "products_ids": ObjectId(product_id), "groupe": groupe, "assurance": assurance }
+        elif product_id != None and groupe != None and assurance == None:
             query = { "products_ids": ObjectId(product_id), "groupe": groupe }
-        except:
+        elif (product_id == None and assurance == None) and (groupe) != None:
+            query = { "groupe": groupe}
+        else:
             return {}
-    data = mongodb_wr.get_proximity_points(settings.PHARMACIES_COLLECTION_NAME, query, longitude, latitude, limit=limit)
-    data = _decode_ids(data, ["_id"]) 
-    for d in data:
-        del d["products_ids"]
+        
+        data = mongodb_wr.get_proximity_points(settings.PHARMACIES_COLLECTION_NAME, query, latitude, longitude, limit=10)
+        data = _decode_ids(data, ["_id"]) 
+        for d in data:
+            del d["products_ids"]
+    except:
+        return {}
     return data
 
 
@@ -132,7 +142,7 @@ if __name__ == '__main__':
     # delete_product(M, "614b1dc0c1b00b1b89acadc0")
     # enable_product(M, "614c67ec7831965969347dc6", "614b9bbe257b7ec7226aad2d")
     # d = search_pharmacies(M, "groupe 1", "614b9bbe257b7ec7226aad2d", -1.5698727, 12.3330991, 5)
-    d = search_pharmacies(M, -1.5698727, 12.3330991, product_id=None, groupe=1)
+    d = search_pharmacies(M, -1.5698727, 12.3330991, product_id=None, groupe=4, assurance=None)
     # d = enable_products(M, "614e13463a309c3503b4ef99", [ "614e1350bd7df13306e96dcc", "614e1350bd7df13306e96dcd"])
     print(d)
     

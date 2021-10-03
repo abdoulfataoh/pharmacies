@@ -6,8 +6,8 @@ info:
     email: abdoulfataoh@gmail.com
   version: 1.0.0
 servers:
-- url: http://localhost:8000
-  description: local server
+- url: http://localhost:8080
+  description: test server
 paths:
   /health:
     get:
@@ -79,16 +79,18 @@ paths:
                 timestamp: "1430401802,"
                 result: true
       x-openapi-router-controller: swagger_server.controllers.default_controller
-  /products/delete:
-    post:
+  /products/{product_id}:
+    delete:
       summary: delete a product
-      operationId: products_delete_post
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/products_delete_body'
+      operationId: products_product_id_delete
+      parameters:
+      - name: product_id
+        in: path
         required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       responses:
         "200":
           description: reponse status
@@ -158,16 +160,18 @@ paths:
                 timestamp: "1430401802,"
                 result: true
       x-openapi-router-controller: swagger_server.controllers.default_controller
-  /pharmacie/delete:
-    post:
+  /pharmacie/{pharmacie_id}:
+    delete:
       summary: delete a pharmacie by id
-      operationId: pharmacie_delete_post
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/pharmacie_delete_body'
+      operationId: pharmacie_pharmacie_id_delete
+      parameters:
+      - name: pharmacie_id
+        in: path
         required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       responses:
         "200":
           description: reponse status
@@ -231,67 +235,6 @@ paths:
                     - 12.37513
                   distance: 9496.179816887958
       x-openapi-router-controller: swagger_server.controllers.default_controller
-  /pharmacies/proximities/{search_product_id}:
-    get:
-      summary: Returns a list of pharmacies order by proximity with a specic product
-      operationId: pharmacies_proximities_search_product_id_get
-      parameters:
-      - name: search_product_id
-        in: path
-        description: product id
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: lat
-        in: query
-        description: client location latitude
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: number
-      - name: long
-        in: query
-        description: client location longitude
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: number
-      responses:
-        "200":
-          description: A order by  JSON array of pharmacies
-          content:
-            application/json:
-              schema:
-                type: object
-                x-content-type: application/json
-              example:
-                success: "true,"
-                timestamp: "1430401802,"
-                result:
-                - _id: 614c67ec7831965969347dc6
-                  nom_pharmacie: avenir
-                  telephone: 25361338
-                  code_postale: 01 bp 4881
-                  addresse: secteur 14 (zogona)
-                  assurance:
-                  - sonar
-                  - ' sunu'
-                  - ' uab'
-                  groupe: groupe 1
-                  products_ids:
-                  - 614b9bbe257b7ec7226aad2d
-                  - 614b9bbe257b7ec7226aad2d
-                  localisation:
-                    type: Point
-                    coordinates:
-                    - -1.49388
-                    - 12.37513
-                  distance: 9496.179816887958
-      x-openapi-router-controller: swagger_server.controllers.default_controller
   /pharmacies/mananger/{pharmacie_id}/set_available_products:
     post:
       summary: set products list as available products for a pharmacie
@@ -324,10 +267,10 @@ paths:
                 timestamp: "1430401802,"
                 result: true
       x-openapi-router-controller: swagger_server.controllers.default_controller
-  /pharmacies/mananger/{pharmacie_id}/set_unvailable_products:
+  /pharmacies/manager/{pharmacie_id}/set_unvailable_products:
     post:
       summary: set products list as available products for a pharmacie
-      operationId: pharmacies_mananger_pharmacie_id_set_unvailable_products_post
+      operationId: pharmacies_manager_pharmacie_id_set_unvailable_products_post
       parameters:
       - name: pharmacie_id
         in: path
@@ -355,6 +298,57 @@ paths:
                 success: "true,"
                 timestamp: "1430401802,"
                 result: true
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /pharmacies/proximities/{search_product_id}:
+    post:
+      summary: Returns a list of pharmacies order by proximity with a specic product
+      operationId: pharmacies_proximities_search_product_id_post
+      parameters:
+      - name: search_product_id
+        in: path
+        description: product id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/search_pharmacies_body'
+        required: true
+      responses:
+        "200":
+          description: A order by  JSON array of pharmacies
+          content:
+            application/json:
+              schema:
+                type: object
+                x-content-type: application/json
+              example:
+                success: "true,"
+                timestamp: "1430401802,"
+                result:
+                - _id: 614c67ec7831965969347dc6
+                  nom_pharmacie: avenir
+                  telephone: 25361338
+                  code_postale: 01 bp 4881
+                  addresse: secteur 14 (zogona)
+                  assurance:
+                  - sonar
+                  - ' sunu'
+                  - ' uab'
+                  groupe: groupe 1
+                  products_ids:
+                  - 614b9bbe257b7ec7226aad2d
+                  - 614b9bbe257b7ec7226aad2d
+                  localisation:
+                    type: Point
+                    coordinates:
+                    - -1.49388
+                    - 12.37513
+                  distance: 9496.179816887958
       x-openapi-router-controller: swagger_server.controllers.default_controller
 components:
   schemas:
@@ -387,13 +381,6 @@ components:
             type: string
         prix_public:
           type: number
-    products_delete_body:
-      required:
-      - product_id
-      type: object
-      properties:
-        product_id:
-          type: string
     pharmacie_add_body:
       required:
       - localisation
@@ -422,34 +409,35 @@ components:
           type: array
           items:
             type: string
-    pharmacie_delete_body:
-      required:
-      - pharmacie_id
-      type: object
-      properties:
-        pharmacie_id:
-          type: string
     pharmacie_id_set_available_products_body:
       required:
-      - pharmacie_id
       - products_ids
       type: object
       properties:
-        pharmacie_id:
-          type: string
         products_ids:
           type: array
           items:
             type: string
     pharmacie_id_set_unvailable_products_body:
       required:
-      - pharmacie_id
       - products_ids
       type: object
       properties:
-        pharmacie_id:
-          type: string
         products_ids:
+          type: array
+          items:
+            type: string
+    search_pharmacies_body:
+      required:
+      - lat
+      - long
+      type: object
+      properties:
+        lat:
+          type: number
+        long:
+          type: number
+        assurance:
           type: array
           items:
             type: string

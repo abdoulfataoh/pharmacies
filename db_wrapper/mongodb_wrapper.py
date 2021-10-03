@@ -49,7 +49,8 @@ class MongoWrapper(object):
                     "maxDistance": raduis
                 }
             },
-            { "$limit": limit }
+            { "$limit": limit },
+            { "$sort" : { "distance" : 1 } }
         ]
         return [doc for doc in col.aggregate(pipeline)]
 

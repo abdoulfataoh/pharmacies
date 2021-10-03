@@ -25,11 +25,13 @@ def exel_to_json(file_path: str, sheetname: str, replace_none_value=None, lower=
             if lower is True and type(cell_value) is str:
                 cell_value = cell_value.lower().strip()
             tmp_list.append(cell_value)
-                
-        json_items_list.append(dict(zip(header, tmp_list)))
+        obj = dict(zip(header, tmp_list))
+        if all(value == None for value in obj.values()) == False:   
+            json_items_list.append(obj)
         tmp_list = []
-    d = json.dumps(json_items_list, indent=4, ensure_ascii=False)
-    return json.loads(d)
+    # fix encoded problem
+    data = json.dumps(json_items_list, indent=4, ensure_ascii=False)
+    return json.loads(data)
     
 def split_values(list_json_obj: list, fields_name:list) -> list: 
     """split values ​​contained in fields of a list of json objects
@@ -57,6 +59,6 @@ def split_values(list_json_obj: list, fields_name:list) -> list:
 
 # Test
 if __name__ == '__main__':
-    d = exel_to_json('../data/produits.xlsx', 'produits')
-    d = split_values(d,  [{'key':'dci', 'separator': ','}])
+    d = exel_to_json('../data/groupes_pharmacies.xlsx', 'groupe_4')
+    # d = split_values(d,  [{'key':'dci', 'separator': ','}])
     print(d)

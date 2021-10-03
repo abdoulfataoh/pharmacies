@@ -14,24 +14,19 @@ class PharmacieIdSetUnvailableProductsBody(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, pharmacie_id: str=None, products_ids: List[str]=None):  # noqa: E501
+    def __init__(self, products_ids: List[str]=None):  # noqa: E501
         """PharmacieIdSetUnvailableProductsBody - a model defined in Swagger
 
-        :param pharmacie_id: The pharmacie_id of this PharmacieIdSetUnvailableProductsBody.  # noqa: E501
-        :type pharmacie_id: str
         :param products_ids: The products_ids of this PharmacieIdSetUnvailableProductsBody.  # noqa: E501
         :type products_ids: List[str]
         """
         self.swagger_types = {
-            'pharmacie_id': str,
             'products_ids': List[str]
         }
 
         self.attribute_map = {
-            'pharmacie_id': 'pharmacie_id',
             'products_ids': 'products_ids'
         }
-        self._pharmacie_id = pharmacie_id
         self._products_ids = products_ids
 
     @classmethod
@@ -44,29 +39,6 @@ class PharmacieIdSetUnvailableProductsBody(Model):
         :rtype: PharmacieIdSetUnvailableProductsBody
         """
         return util.deserialize_model(dikt, cls)
-
-    @property
-    def pharmacie_id(self) -> str:
-        """Gets the pharmacie_id of this PharmacieIdSetUnvailableProductsBody.
-
-
-        :return: The pharmacie_id of this PharmacieIdSetUnvailableProductsBody.
-        :rtype: str
-        """
-        return self._pharmacie_id
-
-    @pharmacie_id.setter
-    def pharmacie_id(self, pharmacie_id: str):
-        """Sets the pharmacie_id of this PharmacieIdSetUnvailableProductsBody.
-
-
-        :param pharmacie_id: The pharmacie_id of this PharmacieIdSetUnvailableProductsBody.
-        :type pharmacie_id: str
-        """
-        if pharmacie_id is None:
-            raise ValueError("Invalid value for `pharmacie_id`, must not be `None`")  # noqa: E501
-
-        self._pharmacie_id = pharmacie_id
 
     @property
     def products_ids(self) -> List[str]:
